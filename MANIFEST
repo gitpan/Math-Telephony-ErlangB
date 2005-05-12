@@ -1,0 +1,8 @@
+Changes
+lib/Math/Telephony/ErlangB.pm
+Makefile.PL
+MANIFEST
+README
+t/ErlangB-ITU.t
+t/Math-Telephony-ErlangB.t
+META.yml                                 Module meta-data (added by MakeMaker)
