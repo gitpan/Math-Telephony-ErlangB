@@ -6,10 +6,11 @@ Math::Telephony::ErlangB - Perl extension for Erlang B calculations
 
 =head1 SYNOPSIS
 
-  use Math::Telephony::ErlangB;
+  use Math::Telephony::ErlangB qw( :all );
 
   # Evaluate blocking probability
-  $gos = gos($traffic, $servers);
+  $bprob = blocking_probability($traffic, $servers);
+  $gos = gos($traffic, $servers); # Same result as above
 
   # Dimension minimum number of needed servers
   $servers = servers($traffic, $gos);
@@ -72,18 +73,18 @@ our @ISA = qw(Exporter);
 # This allows declaration	use Math::Telephony::ErlangB ':all';
 # If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
 # will save memory.
-our %EXPORT_TAGS = ('all' => [qw( gos servers traffic )]);
+our %EXPORT_TAGS = ('all' => [qw( blocking_probability gos servers traffic )]);
 
 our @EXPORT_OK = (@{$EXPORT_TAGS{'all'}});
 
 our @EXPORT = qw();
 
-our $VERSION = '0.02';
+our $VERSION = '0.05';
 
 # Preloaded methods go here.
 
 # Workhorse functions, no check on input value is done!
-sub _gos {
+sub _blocking_probability {
    my ($traffic, $servers) = @_;
    my $gos = 1;
    for my $m (1 .. $servers) {
@@ -93,40 +94,42 @@ sub _gos {
    return $gos;
 } ## end sub _gos
 
-sub _servers {
-   my ($traffic, $gos) = @_;
+sub _generic_servers {
+   my $cost = shift;
 
    # Exponential "backoff"
    my $servers = 1;
-   $servers *= 2 while (_gos($traffic, $servers) > $gos);
+   $servers *= 2 while ($cost->($servers) > 0);
    return $servers if ($servers <= 2);
 
    # Binary search
    my ($minservers, $maxservers) = ($servers / 2, $servers);
    while ($maxservers - $minservers > 1) {
       $servers = int(($maxservers + $minservers) / 2);
-      if (_gos($traffic, $servers) > $gos) {
+      if ($cost->($servers) > 0) {
          $minservers = $servers;
       }
       else {
          $maxservers = $servers;
       }
-   } ## end while ($maxservers - $minservers...
+   }
    return $maxservers;
-} ## end sub _servers
+}
 
-sub _traffic {
-   my ($servers, $gos, $prec) = @_;
+sub _generic_traffic {
+   my ($cond, $prec, $hint) = @_;
 
    # Establish some upper limit
-   my $traffic = $servers;
-   $traffic *= 2 while (_gos($traffic, $servers) < $gos);
+   my ($inftraffic, $suptraffic) = (0, $hint || 1);
+   while ($cond->($suptraffic)) {
+		$inftraffic = $suptraffic;
+		$suptraffic *= 2;
+	}
 
    # Binary search
-   my ($inftraffic, $suptraffic) = (0, $traffic);
    while (($suptraffic - $inftraffic) > $prec) {
-      $traffic = ($suptraffic + $inftraffic) / 2;
-      if (_gos($traffic, $servers) < $gos) {
+      my $traffic = ($suptraffic + $inftraffic) / 2;
+      if ($cond->($traffic)) {
          $inftraffic = $traffic;
       }
       else {
@@ -134,7 +137,7 @@ sub _traffic {
       }
    } ## end while (($suptraffic - $inftraffic...
    return $inftraffic;
-} ## end sub _traffic
+}
 
 
 =head2 VARIABLES
@@ -179,20 +182,31 @@ this must be a defined value, greater or equal to 0.
 
 =item *
 
-B<gos> is the I<grade of service>, i.e. the blocking probability.
+B<blocking probability> is the probability that a given service request
+will be blocked due to congestion.
+
+=item *
+
+B<gos> is the I<grade of service>, that corresponds to the blocking
+probability for Erlang B calculation. The concept of Grade of Service is
+a little different in perspective: in general, it should give us an
+estimate of how the service is good (or bad). In the Erlang B model
+this role is played by the blocking probability, thus the B<gos> is
+equal to it.
 
 =back
 
 
 =over
 
-=item B<$gos = gos($traffic, $servers);>
+=item B<$bprob = blocking_probability($traffic, $servers);>
 
-Evaluate the grade of service from given traffic and number of servers.
+Evaluate the blocking probability from given traffic and numer of
+servers.
 
 =cut
 
-sub gos {
+sub blocking_probability {
    my ($traffic, $servers) = @_;
 
    return undef
@@ -204,13 +218,23 @@ sub gos {
    return 0 unless $traffic > 0;
    return 1 unless $servers > 0;
 
-   _gos($traffic, $servers);
+   _blocking_probability($traffic, $servers);
 } ## end sub gos
 
-=item B<$servers = servers($traffic, $gos);>
+
+=item B<$gos = gos($traffic, $servers);>
+
+Evaluate the grade of service from given traffic and number of servers.
+For Erlang B, the GoS figure corresponds to the blocking probability.
+
+=cut
+
+sub gos { blocking_probability(@_) }
+
+=item B<$servers = servers($traffic, $bprob);>
 
 Calculate minimum number of servers needed to serve the given traffic
-with a blocking probability not greater than the given gos.
+with a blocking probability not greater than that given.
 
 =cut
 
@@ -225,16 +249,15 @@ sub servers {
    return 0 unless ($traffic > 0 && $gos < 1);
    return undef unless ($gos > 0);
 
-   _servers($traffic, $gos);
+   _generic_servers(sub {_blocking_probability($traffic, $_[0]) > $gos});
 } ## end sub servers
 
-=item B<$traffic = traffic($servers, $gos);>
+=item B<$traffic = traffic($servers, $bprob);>
 
-=item B<$traffic = traffic($servers, $gos, $prec);>
+=item B<$traffic = traffic($servers, $bprob, $prec);>
 
 Calculate the maximum offered traffic that can be served by the given
-number of serves with a blocking probability not greater than the given
-gos.
+number of serves with a blocking probability not greater than that given.
 
 The prec parameter allows to set the precision in this traffic calculation.
 If undef it defaults to $default_precision in this package.
@@ -259,7 +282,7 @@ sub traffic {
    $prec = $default_precision unless defined $prec;
    return undef unless ($prec > 0);
 
-   _traffic($servers, $gos, $prec);
+	_generic_traffic(sub {_blocking_probability($_[0], $servers) < $gos }, $prec, $servers);
 } ## end sub traffic
 
 1;
