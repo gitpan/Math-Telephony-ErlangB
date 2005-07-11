@@ -79,7 +79,7 @@ our @EXPORT_OK = (@{$EXPORT_TAGS{'all'}});
 
 our @EXPORT = qw();
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 # Preloaded methods go here.
 
@@ -127,7 +127,7 @@ sub _generic_traffic {
 	}
 
    # Binary search
-   while (($suptraffic - $inftraffic) > $prec) {
+   while (($suptraffic - $inftraffic) / $suptraffic > $prec) {
       my $traffic = ($suptraffic + $inftraffic) / 2;
       if ($cond->($traffic)) {
          $inftraffic = $traffic;

@@ -12,3 +12,6 @@ Revision history for Perl extension Math::Telephony::ErlangB.
 0.05  Wed Jun 29 03:35:00 2005
    - added blocking_probability function (same as "gos")
    - added generic methods to calculate servers and traffic
+
+0.06  Tue Jul 05 01:03:00 2005
+   - _generic_traffic now checks relative precision, not absolute
