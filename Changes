@@ -1,5 +1,8 @@
 Revision history for Perl extension Math::Telephony::ErlangB.
 
+0.9    Mon Sep  3 14:53:00 2007
+   - had to step back for module numbering, CPAN indexer complaining
+
 0.0.8  Mon Sep  3 14:41:00 2007
    - restored README to its previous content, plus some updates.
    
