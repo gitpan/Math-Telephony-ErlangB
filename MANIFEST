@@ -1,8 +1,11 @@
+Build.PL
 Changes
-lib/Math/Telephony/ErlangB.pm
-Makefile.PL
 MANIFEST
+Makefile.PL
 README
-t/ErlangB-ITU.t
-t/Math-Telephony-ErlangB.t
-META.yml                                 Module meta-data (added by MakeMaker)
+lib/Math/Telephony/ErlangB.pm
+t/00.load.t
+t/pod-coverage.t
+t/pod.t
+META.yml
+eg/gos.pl

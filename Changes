@@ -1,17 +1,24 @@
 Revision history for Perl extension Math::Telephony::ErlangB.
 
-0.01  Mon Jun  6 01:03:13 2005
-	- original version; created by h2xs 1.23 with options
-		-XAn TrafficModeling::ErlangB
-		
-0.02  Fri May 13 00:29:00 2005
-	- moved to Math::Telephony::ErlangB, added tests from ITU
+0.0.7  Mon Sep  3 12:21:04 2007
+   - changed general structure to my current module layout
+   - changed version numbering to three-numbers, don't know why I use 3 :)
+   - re-arranged documentation and added some tests for pod
+   - added an example for qwalitee whoring
+   - reverted this Changes file so that new stuff is in the head
 
-0.03 and 0.04 were internal
+0.06  Tue Jul 05 01:03:00 2005
+   - _generic_traffic now checks relative precision, not absolute
 
 0.05  Wed Jun 29 03:35:00 2005
    - added blocking_probability function (same as "gos")
    - added generic methods to calculate servers and traffic
 
-0.06  Tue Jul 05 01:03:00 2005
-   - _generic_traffic now checks relative precision, not absolute
+0.03 and 0.04 were internal
+
+0.02  Fri May 13 00:29:00 2005
+	- moved to Math::Telephony::ErlangB, added tests from ITU
+
+0.01  Mon Jun  6 01:03:13 2005
+	- original version; created by h2xs 1.23 with options
+		-XAn TrafficModeling::ErlangB
