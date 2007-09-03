@@ -1,11 +1,13 @@
 Build.PL
 Changes
 MANIFEST
+META.yml
 Makefile.PL
 README
 lib/Math/Telephony/ErlangB.pm
 t/00.load.t
 t/pod-coverage.t
 t/pod.t
-META.yml
+t/ErlangB-ITU.t
+t/Math-Telephony-ErlangB.t
 eg/gos.pl

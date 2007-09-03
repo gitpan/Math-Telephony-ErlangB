@@ -1,6 +1,6 @@
 ---
 name: Math-Telephony-ErlangB
-version: v0.9
+version: 0.9.1
 author:
   - 'Flavio Poletti <flavio [at] polettix [dot] it>'
 abstract: Erlang B calculations from Perl
@@ -13,7 +13,7 @@ requires:
 provides:
   Math::Telephony::ErlangB:
     file: lib/Math/Telephony/ErlangB.pm
-    version: v0.9
+    version: 0.9.1
 generated_by: Module::Build version 0.2808
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
