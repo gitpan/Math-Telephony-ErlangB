@@ -1,6 +1,6 @@
 package Math::Telephony::ErlangB;
 
-use version; our $VERSION = qv('0.9.1');
+use version; our $VERSION = qv('1.0.0');
 
 use warnings;
 use strict;
