@@ -11,3 +11,4 @@ t/pod.t
 t/ErlangB-ITU.t
 t/Math-Telephony-ErlangB.t
 eg/gos.pl
+META.json

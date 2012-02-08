@@ -1,20 +1,23 @@
 ---
-name: Math-Telephony-ErlangB
-version: 1.0.0
+abstract: 'Erlang B calculations from Perl'
 author:
   - 'Flavio Poletti <flavio [at] polettix [dot] it>'
-abstract: Erlang B calculations from Perl
-license: perl
-resources:
-  license: http://dev.perl.org/licenses/
+build_requires:
+  ExtUtils::MakeMaker: 0
+configure_requires:
+  ExtUtils::MakeMaker: 0
+dynamic_config: 1
+generated_by: 'ExtUtils::MakeMaker version 6.59, CPAN::Meta::Converter version 2.112150'
+license: unknown
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Math-Telephony-ErlangB
+no_index:
+  directory:
+    - t
+    - inc
 requires:
   Test::More: 0
   version: 0
-provides:
-  Math::Telephony::ErlangB:
-    file: lib/Math/Telephony/ErlangB.pm
-    version: 1.0.0
-generated_by: Module::Build version 0.2808
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+version: v1.0.1
