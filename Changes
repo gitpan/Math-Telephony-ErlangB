@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Telephony::ErlangB.
 
+1.0.2  Sun Jul 21 15:15:00 2013
+   - Fixed issues with encoding & POD
+   - Removed POD tests for non-authors
+
 1.0.1  Thu Feb  9 00:33:00 2012
    - stepped revision to make CPAN Indexer happy. Why? Ehr...
      I deleted 1.0.0 accidentally...

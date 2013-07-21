@@ -1,6 +1,6 @@
 package Math::Telephony::ErlangB;
 
-use version; our $VERSION = qv('1.0.1');
+use version; our $VERSION = qv('1.0.2');
 
 use warnings;
 use strict;
@@ -133,6 +133,8 @@ sub traffic {
 
 1;    # Magic true value required at end of module
 __END__
+
+=encoding iso-8859-1
 
 =head1 NAME
 
